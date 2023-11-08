@@ -15,6 +15,16 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QPushButton" name="btnRefreshLayers">
+     <property name="toolTip">
+      <string>Voert het script uit om de lijst met kaartlagen te verversen. Dit zal ongeveer een minuut duren.</string>
+     </property>
+     <property name="text">
+      <string>PDOK kaartlagen vernieuwen</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -30,7 +40,14 @@
        <string>PDOK Services</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0" colspan="4">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Zoeken</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="4">
         <widget class="QTableView" name="servicesView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -49,26 +66,7 @@
         </attribute>
         </widget>
        </item>
-       <item row="2" column="0" colspan="4">
-        <widget class="QTextBrowser" name="layer_info">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>400</height>
-          </size>
-         </property>
-         <property name="openExternalLinks">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
+       <item row="1" column="2">
         <widget class="QLineEdit" name="layerSearch">
          <property name="placeholderText">
           <string>Start met het type service en dan overige termen, bv &quot;wfs cbs provincie&quot;</string>
@@ -78,14 +76,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Zoeken</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="4">
+       <item row="4" column="0" colspan="4">
         <widget class="QGroupBox" name="layer_options_groupbox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -172,6 +163,25 @@
            </layout>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="4">
+        <widget class="QTextBrowser" name="layer_info">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>400</height>
+          </size>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
