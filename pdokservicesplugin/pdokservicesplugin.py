@@ -187,6 +187,8 @@ class PdokServicesPlugin(object):
 
         self.add_fav_actions_to_toolbar_button()
 
+        self.dlg.ui.btnRefreshLayers.clicked.connect(self.execute_reload_layers_script)
+
         self.toolbar_search = QLineEdit()
 
         def toolbar_search_mouse_event():
@@ -278,6 +280,7 @@ class PdokServicesPlugin(object):
             self.iface.mainWindow(), f"{PLUGIN_NAME} - About", infoString
         )
         
+    def execute_reload_layers_script(self):
         # Code for running the layer-config shell script after clicking about button
         current_directory = os.path.dirname(os.path.realpath(__file__))
         root_directory = os.path.abspath(os.path.join(current_directory, '..'))
@@ -286,8 +289,13 @@ class PdokServicesPlugin(object):
 
         # Check if the script file exists before attempting to execute it
         if os.path.exists(script_path):
-            subprocess.run(['bash', script_path, output_dir])
-            print(f"The script '{script_path}' found and executed.")
+            try:
+                subprocess.run(['bash', script_path, output_dir])
+                print(f"The script '{script_path}' found and executed.")
+            except Exception:
+                print("Failed to update layers-pdok.json")
+                pass
+                
         else:
             print(f"The script file '{script_path}' does not exist.")
 
