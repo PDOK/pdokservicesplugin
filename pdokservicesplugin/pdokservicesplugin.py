@@ -54,6 +54,7 @@ from qgis.core import (
 from qgis.gui import QgsVertexMarker
 import qgis.utils
 
+import subprocess
 import textwrap
 import json
 import os
@@ -276,6 +277,20 @@ class PdokServicesPlugin(object):
         QMessageBox.information(
             self.iface.mainWindow(), f"{PLUGIN_NAME} - About", infoString
         )
+        
+        # Code for running the layer-config shell script after clicking about button
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        root_directory = os.path.abspath(os.path.join(current_directory, '..'))
+        script_path = os.path.join(root_directory, 'scripts', 'generate-pdok-layers-config.sh')
+        output_dir = os.path.join(current_directory, 'resources', 'layers-pdok.json')
+
+        # Check if the script file exists before attempting to execute it
+        if os.path.exists(script_path):
+            subprocess.run(['bash', script_path, output_dir])
+            print(f"The script '{script_path}' found and executed.")
+        else:
+            print(f"The script file '{script_path}' does not exist.")
+
 
     def unload(self):
         try:  # using try except here because plugin could be unloaded during development: gracefully fail
