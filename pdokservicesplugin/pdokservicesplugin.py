@@ -63,7 +63,7 @@ import locale
 import re
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
 # Initialize Qt resources from file resources.py
@@ -292,12 +292,14 @@ class PdokServicesPlugin(object):
         if os.path.exists(script_path):
             try:
                 subprocess.run(['bash', script_path, output_dir])
-                log.debug(f"The script '{script_path}' found and executed.")
+                log.info(f"The script '{script_path}' found and executed.")
+                self.services_loaded = False
+                self.run()
             except Exception:
-                log.debug("Failed to update layers-pdok.json")
+                log.info("Failed to update layers-pdok.json")
                 pass
         else:
-            log.debug(f"The script file '{script_path}' does not exist.")
+            log.info(f"The script file '{script_path}' does not exist.")
             pass
 
 
