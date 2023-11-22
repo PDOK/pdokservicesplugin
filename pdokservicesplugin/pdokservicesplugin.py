@@ -32,7 +32,7 @@ from qgis.PyQt.QtWidgets import (
     QMessageBox,
     QMenu,
     QToolButton,
-    QCompleter
+    QCompleter,
 )
 from qgis.PyQt.QtGui import QIcon, QStandardItemModel, QStandardItem, QColor
 from qgis.PyQt.QtCore import QSortFilterProxyModel, QRegExp
@@ -64,7 +64,9 @@ import locale
 import re
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 log = logging.getLogger(__name__)
 
 # Initialize Qt resources from file resources.py
@@ -152,7 +154,6 @@ class PdokServicesPlugin(object):
         self.pdok_icon = QIcon(
             os.path.join(self.plugin_dir, "resources", "icon_pdok.svg")
         )
-
 
         self.run_action = QAction(self.run_icon, PLUGIN_NAME, self.iface.mainWindow())
         self.run_button = QToolButton()
@@ -292,13 +293,17 @@ class PdokServicesPlugin(object):
 
     def restore_layers_from_original(self):
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        resources_directory = os.path.abspath(os.path.join(current_directory, "resources"))
-        original_layer_loc = os.path.join(resources_directory, "layers-pdok-ORIGINAL.json")
+        resources_directory = os.path.abspath(
+            os.path.join(current_directory, "resources")
+        )
+        original_layer_loc = os.path.join(
+            resources_directory, "layers-pdok-ORIGINAL.json"
+        )
         target_layer_loc = os.path.join(resources_directory, "layers-pdok.json")
 
         if os.path.exists(original_layer_loc):
             try:
-                shutil.copy2(original_layer_loc,target_layer_loc)
+                shutil.copy2(original_layer_loc, target_layer_loc)
                 self.services_loaded = False
                 self.update_visibility_restore_layers_button()
                 log.info(f"Original pdok-layers.json file restored.")
@@ -310,14 +315,16 @@ class PdokServicesPlugin(object):
     def execute_reload_layers_script(self):
         # Code for running the layer-config shell script after clicking button
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        root_directory = os.path.abspath(os.path.join(current_directory, '..'))
-        script_path = os.path.join(root_directory, 'scripts', 'generate-pdok-layers-config.sh')
-        output_dir = os.path.join(current_directory, 'resources', 'layers-pdok.json')
+        root_directory = os.path.abspath(os.path.join(current_directory, ".."))
+        script_path = os.path.join(
+            root_directory, "scripts", "generate-pdok-layers-config.sh"
+        )
+        output_dir = os.path.join(current_directory, "resources", "layers-pdok.json")
 
         # Check if the script file exists before attempting to execute it
         if os.path.exists(script_path):
             try:
-                subprocess.run(['bash', script_path, output_dir])
+                subprocess.run(["bash", script_path, output_dir])
                 log.info(f"The script '{script_path}' found and executed.")
                 self.services_loaded = False
                 self.update_visibility_restore_layers_button()
@@ -331,12 +338,18 @@ class PdokServicesPlugin(object):
 
     def update_visibility_restore_layers_button(self):
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        resources_directory = os.path.abspath(os.path.join(current_directory, "resources"))
-        with open(os.path.join(resources_directory, "layers-pdok-ORIGINAL.json"), 'r') as original:
+        resources_directory = os.path.abspath(
+            os.path.join(current_directory, "resources")
+        )
+        with open(
+            os.path.join(resources_directory, "layers-pdok-ORIGINAL.json"), "r"
+        ) as original:
             original_json = json.load(original)
-        with open(os.path.join(resources_directory, "layers-pdok.json"), 'r') as current:
+        with open(
+            os.path.join(resources_directory, "layers-pdok.json"), "r"
+        ) as current:
             current_json = json.load(current)
-        if (original_json == current_json):
+        if original_json == current_json:
             self.dlg.ui.btnRestoreLayers.setEnabled(False)
         else:
             self.dlg.ui.btnRestoreLayers.setEnabled(True)
