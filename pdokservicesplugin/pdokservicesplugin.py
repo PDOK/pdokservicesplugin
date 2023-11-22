@@ -146,10 +146,13 @@ class PdokServicesPlugin(object):
         self.fav_icon = QIcon(
             os.path.join(self.plugin_dir, "resources", "pdok_icon_bookmark.svg")
         )
-
         self.del_icon = QIcon(
             os.path.join(self.plugin_dir, "resources", "pdok_icon_delete.svg")
         )
+        self.pdok_icon = QIcon(
+            os.path.join(self.plugin_dir, "resources", "icon_pdok.svg")
+        )
+
 
         self.run_action = QAction(self.run_icon, PLUGIN_NAME, self.iface.mainWindow())
         self.run_button = QToolButton()
@@ -192,6 +195,8 @@ class PdokServicesPlugin(object):
         self.dlg.ui.btnRefreshLayers.setIcon(self.run_icon)
         self.dlg.ui.btnRefreshLayers.clicked.connect(self.execute_reload_layers_script)
 
+        self.update_visibility_restore_layers_button()
+        self.dlg.ui.btnRestoreLayers.setIcon(self.pdok_icon)
         self.dlg.ui.btnRestoreLayers.clicked.connect(self.restore_layers_from_original)
 
         self.toolbar_search = QLineEdit()
@@ -294,7 +299,7 @@ class PdokServicesPlugin(object):
         if os.path.exists(original_layer_loc):
             shutil.copy2(original_layer_loc,target_layer_loc)
             self.services_loaded = False
-            self.dlg.ui.btnRestoreLayers.setEnabled(False)
+            self.update_visibility_restore_layers_button()
             log.info(f"Original pdok-layers.json file restored.")
             self.run()
 
@@ -315,7 +320,7 @@ class PdokServicesPlugin(object):
                 self.services_loaded = False
                 self.dlg.ui.btnRefreshLayers.setIcon(QIcon())
                 self.dlg.ui.btnRefreshLayers.setIcon(self.run_icon)
-                self.dlg.ui.btnRestoreLayers.setEnabled(True)
+                self.update_visibility_restore_layers_button()
                 self.run()
             except Exception:
                 log.info("Failed to update layers-pdok.json")
@@ -323,6 +328,20 @@ class PdokServicesPlugin(object):
         else:
             log.info(f"The script file '{script_path}' does not exist.")
             pass
+
+    def update_visibility_restore_layers_button(self):
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        resources_directory = os.path.abspath(os.path.join(current_directory, "resources"))
+        with open(os.path.join(resources_directory, "layers-pdok-ORIGINAL.json"), 'r') as original:
+            original_json = json.load(original)
+        with open(os.path.join(resources_directory, "layers-pdok.json"), 'r') as current:
+            current_json = json.load(current)
+        if (original_json == current_json):
+            self.dlg.ui.btnRestoreLayers.setEnabled(False)
+        else:
+            self.dlg.ui.btnRestoreLayers.setEnabled(True)
+
+            
 
 
     def unload(self):
