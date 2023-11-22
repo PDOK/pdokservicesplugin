@@ -32,7 +32,7 @@ from qgis.PyQt.QtWidgets import (
     QMessageBox,
     QMenu,
     QToolButton,
-    QCompleter,
+    QCompleter
 )
 from qgis.PyQt.QtGui import QIcon, QStandardItemModel, QStandardItem, QColor
 from qgis.PyQt.QtCore import QSortFilterProxyModel, QRegExp
@@ -297,16 +297,18 @@ class PdokServicesPlugin(object):
         target_layer_loc = os.path.join(resources_directory, "layers-pdok.json")
 
         if os.path.exists(original_layer_loc):
-            shutil.copy2(original_layer_loc,target_layer_loc)
-            self.services_loaded = False
-            self.update_visibility_restore_layers_button()
-            log.info(f"Original pdok-layers.json file restored.")
-            self.run()
+            try:
+                shutil.copy2(original_layer_loc,target_layer_loc)
+                self.services_loaded = False
+                self.update_visibility_restore_layers_button()
+                log.info(f"Original pdok-layers.json file restored.")
+                self.run()
+            except Exception:
+                log.info("Failed to restore the file")
+                pass
 
-        
     def execute_reload_layers_script(self):
         # Code for running the layer-config shell script after clicking button
-        self.dlg.ui.btnRefreshLayers.setIcon(self.fav_icon)
         current_directory = os.path.dirname(os.path.realpath(__file__))
         root_directory = os.path.abspath(os.path.join(current_directory, '..'))
         script_path = os.path.join(root_directory, 'scripts', 'generate-pdok-layers-config.sh')
@@ -318,8 +320,6 @@ class PdokServicesPlugin(object):
                 subprocess.run(['bash', script_path, output_dir])
                 log.info(f"The script '{script_path}' found and executed.")
                 self.services_loaded = False
-                self.dlg.ui.btnRefreshLayers.setIcon(QIcon())
-                self.dlg.ui.btnRefreshLayers.setIcon(self.run_icon)
                 self.update_visibility_restore_layers_button()
                 self.run()
             except Exception:
@@ -340,9 +340,6 @@ class PdokServicesPlugin(object):
             self.dlg.ui.btnRestoreLayers.setEnabled(False)
         else:
             self.dlg.ui.btnRestoreLayers.setEnabled(True)
-
-            
-
 
     def unload(self):
         try:  # using try except here because plugin could be unloaded during development: gracefully fail
