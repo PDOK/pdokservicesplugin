@@ -58,6 +58,7 @@ import subprocess
 import textwrap
 import json
 import os
+import shutil
 import urllib.request, urllib.parse, urllib.error
 import locale
 import re
@@ -191,6 +192,8 @@ class PdokServicesPlugin(object):
         self.dlg.ui.btnRefreshLayers.setIcon(self.run_icon)
         self.dlg.ui.btnRefreshLayers.clicked.connect(self.execute_reload_layers_script)
 
+        self.dlg.ui.btnRestoreLayers.clicked.connect(self.restore_layers_from_original)
+
         self.toolbar_search = QLineEdit()
 
         def toolbar_search_mouse_event():
@@ -281,9 +284,23 @@ class PdokServicesPlugin(object):
         QMessageBox.information(
             self.iface.mainWindow(), f"{PLUGIN_NAME} - About", infoString
         )
+
+    def restore_layers_from_original(self):
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        resources_directory = os.path.abspath(os.path.join(current_directory, "resources"))
+        original_layer_loc = os.path.join(resources_directory, "layers-pdok-ORIGINAL.json")
+        target_layer_loc = os.path.join(resources_directory, "layers-pdok.json")
+
+        if os.path.exists(original_layer_loc):
+            shutil.copy2(original_layer_loc,target_layer_loc)
+            self.services_loaded = False
+            self.dlg.ui.btnRestoreLayers.setEnabled(False)
+            log.info(f"Original pdok-layers.json file restored.")
+            self.run()
+
         
     def execute_reload_layers_script(self):
-        # Code for running the layer-config shell script after clicking about button
+        # Code for running the layer-config shell script after clicking button
         self.dlg.ui.btnRefreshLayers.setIcon(self.fav_icon)
         current_directory = os.path.dirname(os.path.realpath(__file__))
         root_directory = os.path.abspath(os.path.join(current_directory, '..'))
@@ -298,6 +315,7 @@ class PdokServicesPlugin(object):
                 self.services_loaded = False
                 self.dlg.ui.btnRefreshLayers.setIcon(QIcon())
                 self.dlg.ui.btnRefreshLayers.setIcon(self.run_icon)
+                self.dlg.ui.btnRestoreLayers.setEnabled(True)
                 self.run()
             except Exception:
                 log.info("Failed to update layers-pdok.json")

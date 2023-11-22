@@ -16,11 +16,36 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QPushButton" name="btnRefreshLayers">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Voert het script uit om de lijst met kaartlagen te verversen. Dit zal ongeveer een minuut duren.</string>
      </property>
      <property name="text">
       <string>PDOK kaartlagen vernieuwen</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnRestoreLayers">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Herstel de PDOK lagen wanneer deze is aangepast</string>
+     </property>
+     <property name="text">
+      <string>Originele PDOK kaartlagen herstellen</string>
      </property>
     </widget>
    </item>
