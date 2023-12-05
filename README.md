@@ -94,3 +94,5 @@ symlink_path "$(realpath ~)/.local/share/QGIS/QGIS3/profiles/pdokplugin-develop/
 mkdir -p $(dirname "$symlink_path")
 ln -s "$(pwd)/pdokservicesplugin" "$symlink_path" # uitvoeren vanuit root van repo
 ```
+
+Extend the layers config file using OGC:API urls, see [`scripts/modify-layers-pdok-ogcapi.py`](scripts/modify-layers-pdok-ogcapi.py) for more detailed instructions.
